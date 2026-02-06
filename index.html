@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Stocks</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <p class="heading" id="heading">Lucky Stocks</p>
+
+    <div class="gamehead" id="gamehead">
+        <span class="day" id="day">Monday</span>
+        <span class="score" id="score">0</span>
+    </div>
+    <p class="budget" id="budget">
+        <img src="coin.png" alt="" class="coin">
+        <span class="budget-text" id="budget-text">1000</span>
+    </p>
+
+    <canvas class="chart" id="chart"></canvas>
+
+    <canvas class="input" id="input"></canvas>
+
+    <p class="sectionhead" id="investhead">Investment Today</p>
+    <div class="table investbox" id="investbox"></div>
+    <button class="button" id="investbutton">Invest</button>
+    <p class="sectionhead" id="profithead">Market Profits</p>
+    <div class="table profitbox" id="profitbox"></div>
+    <p class="sectionhead" id="wdhead">Your Withdrawals</p>
+    <div class="table wdbox" id="wdbox"></div>
+    <button class="button" id="nextbutton">Next</button>
+    
+    <div class="dialog-cont" id="dialog-cont">
+        <div class="dialog" id="dialog">
+            <img src="profit.png" alt="" class="dialogimg" id="dialogimg">
+            <p class="dialogscore" id="dialogscore">2342</p>
+            <p class="dialoghs" id="dialoghs">3241</p>
+            <div class="dialogfoot">
+                <button class="button dialogbutton" id="playagain">
+                    Play Again</button>
+                <button class="button dialogbutton" id="reseths">
+                    Reset High Score</button>
+            </div>
+        </div>
+    </div>
+    
+
+</body>
+<script src="main.js"></script>
+
+</html>
