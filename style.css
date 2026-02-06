@@ -6,6 +6,10 @@ html, body{
     font-family: 'Century Gothic', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+*{
+    user-select: none;
+}
+
 .heading{
     font-weight: bold;
     margin: 0;
@@ -155,4 +159,5 @@ html, body{
     display: flex;
     width: 80vw;
     justify-content: space-between;
+
 }
