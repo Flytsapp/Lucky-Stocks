@@ -60,9 +60,31 @@ function short(x){
     return parseInt(x*100)/100;
 }
 
-function getRandomProfit(){
-    var r = Math.random()*200-100;
-    return short(r);
+
+function getRandomTeam(){
+    return parseInt(Math.random()*n);
+}
+
+let favoredTeam = parseInt(Math.random() * n);
+let teamSwitchProb = .30 * n / (n-1); //30% actual
+
+function setFavoredTeam(){
+    var sw = Math.random();
+    if(sw <= teamSwitchProb){
+        favoredTeam = parseInt(Math.random() * n);
+    }
+}
+
+function getRandomProfit(type=0){
+    if(type == 0){
+        var r = Math.random()*200-100;
+        return short(r);
+    }
+    if(type == 1){
+        var r = Math.random()*500-100;
+        if(r < 0) return short(r);
+        return short(r%100);
+    }
 }
 
 function draw_axes(){
@@ -320,6 +342,7 @@ function investMode(){
     wdHead.style.display = "none";
     nextButton.style.display = "none";
     investButton.style.display = "block";
+    setFavoredTeam();
     updateInvestTable();
 }
 investMode();
@@ -343,7 +366,9 @@ for(var c of companies){
 
 function invest(){
     for(var c=0; c<n; c++){
-        profits[c] = getRandomProfit();
+        if(favoredTeam == c) profits[c] = getRandomProfit(1);
+        else profits[c] = getRandomProfit();
+
         wd[c] = investments[c] + profits[c] * investments[c] / 100;
         wd[c] = short(wd[c]);
         hist[c].push(profits[c]);
