@@ -432,6 +432,7 @@ function investMode(){
     wdHead.style.display = "none";
     nextButton.style.display = "none";
     investButton.style.display = "block";
+    input.style.display = "";
     updateInvestTable();
     setRandomDayProfitType();
 }
@@ -444,6 +445,7 @@ function reviewMode(){
     wdHead.style.display = "block";
     nextButton.style.display = "block";
     investButton.style.display = "none";
+    input.style.display = "none";
 }
 
 let profits = [];
