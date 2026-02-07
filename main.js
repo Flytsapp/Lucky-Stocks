@@ -13,6 +13,7 @@ input.height = innerWidth/5;
 const dayEl = document.getElementById("day");
 const budgetEl = document.getElementById("budget-text");
 const scoreEl = document.getElementById("score");
+const dayTypeEl = document.getElementById("daytype");
 
 const investBox = document.getElementById("investbox");
 const profitBox = document.getElementById("profitbox");
@@ -61,30 +62,119 @@ function short(x){
 }
 
 
-function getRandomTeam(){
+function getRandomCompany(){
     return parseInt(Math.random()*n);
 }
 
-let favoredTeam = parseInt(Math.random() * n);
-let teamSwitchProb = .30 * n / (n-1); //30% actual
+const dayProfitTypeText = [
+    "Usual Day",
+    "2 Profit",
+    "2 Loss",
+    "1 Peak Profit",
+    "1 Heavy Loss",
+    "1 Peak Profit, 2 in Loss",
+    "1 Heavy Loss, 2 in Profit",
+    "1 Peak Profit, 1 Heavy Loss",
+    "1 Peak Profit, 2 in Heavy Loss"
+];
 
-function setFavoredTeam(){
-    var sw = Math.random();
-    if(sw <= teamSwitchProb){
-        favoredTeam = parseInt(Math.random() * n);
+let companyProfitTypes = [];
+for(var c=0; c<n; c++) hist.push(0);
+let dayProfitType = 0;
+let totalDayProfitTypes = dayProfitTypeText.length;
+
+function getRandomPermutation(x){
+    var arr = [];
+    for(var a=0; a<x; a++) arr.push(a);
+    for(var i=n-1; i>0; i--){
+        var j = parseInt(Math.random()*(i+1));
+        var t=arr[j];
+        arr[j] = arr[i];
+        arr[i] = t;
+    }
+    return arr;
+}
+
+function setRandomDayProfitType(){
+
+    /* refer dayProfitTypeText for day types*/
+
+    dayProfitType = parseInt(Math.random()*totalDayProfitTypes);
+
+    dayTypeEl.innerText = dayProfitTypeText[dayProfitType];
+
+    var rc = getRandomCompany();
+
+    for(var c=0; c<n; c++){
+        if(dayProfitType == 0) companyProfitTypes[c] = 0;
+        else if(dayProfitType == 1){
+            if(c == rc) companyProfitTypes[c] = 0;
+            else companyProfitTypes[c] = 1;
+        }
+        else if(dayProfitType == 2){
+            if(c == rc) companyProfitTypes[c] = 0;
+            else companyProfitTypes[c] = 2;
+        }
+        else if(dayProfitType == 3){
+            if(c == rc) companyProfitTypes[c] = 3;
+            else companyProfitTypes[c] = 0;
+        }
+        else if(dayProfitType == 4){
+            if(c == rc) companyProfitTypes[c] = 4;
+            else companyProfitTypes[c] = 0;
+        }
+        else if(dayProfitType == 5){
+            if(c == rc) companyProfitTypes[c] = 3;
+            else companyProfitTypes[c] = 2;
+        }
+        else if(dayProfitType == 6){
+            if(c == rc) companyProfitTypes[c] = 4
+            else companyProfitTypes[c] = 1;
+        }
+        else if(dayProfitType == 8){
+            if(c == rc) companyProfitTypes[c] = 3;
+            else companyProfitTypes[c] = 4;
+        }
+    }
+    if(dayProfitType == 7){
+        var shuffle = getRandomPermutation(n);
+        for(var c=0; c<n; c++){
+            if(shuffle[c]==0) companyProfitTypes[c] = 0;
+            else if(shuffle[c]==1) companyProfitTypes[c] = 3;
+            else if(shuffle[c]==2) companyProfitTypes[c] = 4;
+        }
     }
 }
 
 function getRandomProfit(type=0){
+
+    /*
+    0 neutral
+    1 profit
+    2 loss
+    3 high profit
+    4 high loss
+    */
+
+    var r = 0;
+
     if(type == 0){
         var r = Math.random()*200-100;
-        return short(r);
     }
-    if(type == 1){
-        var r = Math.random()*500-100;
-        if(r < 0) return short(r);
-        return short(r%100);
+    else if(type == 1){
+        var r = Math.random()*100;
     }
+    else if(type == 2){
+        var r = -Math.random()*100;
+    }
+    else if(type == 3){
+        var r = Math.random()*10 + 90;
+    }
+    else if(type == 4){
+        var r = -(Math.random()*10 + 90);
+    }
+    
+    return short(r);
 }
 
 function draw_axes(){
@@ -342,8 +432,8 @@ function investMode(){
     wdHead.style.display = "none";
     nextButton.style.display = "none";
     investButton.style.display = "block";
-    setFavoredTeam();
     updateInvestTable();
+    setRandomDayProfitType();
 }
 investMode();
 
@@ -364,15 +454,18 @@ for(var c of companies){
 }
 
 
-function invest(){
+function setDayProfits(){
     for(var c=0; c<n; c++){
-        if(favoredTeam == c) profits[c] = getRandomProfit(1);
-        else profits[c] = getRandomProfit();
-
+        profits[c] = getRandomProfit(companyProfitTypes[c]);
         wd[c] = investments[c] + profits[c] * investments[c] / 100;
         wd[c] = short(wd[c]);
         hist[c].push(profits[c]);
     }
+
+}
+
+function invest(){
+    setDayProfits();
     calculateBudget();
     updateScore();
     drawGraph();
